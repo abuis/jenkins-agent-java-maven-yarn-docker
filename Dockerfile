@@ -4,6 +4,7 @@ FROM jenkins/jnlp-slave:latest
 # Define versions and environment
 ENV DOCKER_CHANNEL edge
 ENV DOCKER_VERSION 18.05.0-ce
+ENV DOCKER_ARG="x86_64"
 # TODO ENV DOCKER_SHA256
 # https://github.com/docker/docker-ce/blob/5b073ee2cf564edee5adca05eee574142f7627bb/components/packaging/static/hash_files !!
 # (no SHA file artifacts on download.docker.com yet as of 2017-06-07 though)
@@ -22,16 +23,21 @@ ENV LD_LIBRARY_PATH="/usr/glibc-compat/lib/libc.so.6"
 
 
 # Install base utilities
-RUN apk add --no-cache ca-certificates
-RUN apk add --no-cache bash
-RUN apk add --no-cache curl
-RUN apk add --no-cache tar
-RUN apk add --no-cache libstdc++
-RUN apk add --no-cache fontconfig
-RUN apk add --no-cache zlib
-RUN apk add --no-cache libzip
-
-RUN apk add --no-cache git
+RUN apt-get update \
+	&& apt-get install -y \
+		bash \
+		curl \
+		tar \
+		libstdc++ \
+		fontconfig \
+		zlib \
+		libzip \
+		openssl \
+		py-pip \
+		git \
+	&& rm -rf /var/lib/apt/lists/*
+	
+#RUN apk add --no-cache ca-certificates
 
 
 # Install docker-in-docker
@@ -51,18 +57,8 @@ RUN set -ex; \
 # wget: error getting response: Connection reset by peer
 	
 # this "case" statement is generated via "update.sh"
-	apkArch="$(apk --print-arch)"; \
-	case "$apkArch" in \
-		x86_64) dockerArch='x86_64' ;; \
-		armhf) dockerArch='armel' ;; \
-		aarch64) dockerArch='aarch64' ;; \
-		ppc64le) dockerArch='ppc64le' ;; \
-		s390x) dockerArch='s390x' ;; \
-		*) echo >&2 "error: unsupported architecture ($apkArch)"; exit 1 ;;\
-	esac; \
-	\
-	if ! curl -fL -o docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${dockerArch}/docker-${DOCKER_VERSION}.tgz"; then \
-		echo >&2 "error: failed to download 'docker-${DOCKER_VERSION}' from '${DOCKER_CHANNEL}' for '${dockerArch}'"; \
+	if ! curl -fL -o docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${DOCKER_ARG}/docker-${DOCKER_VERSION}.tgz"; then \
+		echo >&2 "error: failed to download 'docker-${DOCKER_VERSION}' from '${DOCKER_CHANNEL}' for '${DOCKER_ARG}'"; \
 		exit 1; \
 	fi; \
 	\
@@ -80,7 +76,6 @@ COPY modprobe.sh /usr/local/bin/modprobe
 COPY docker-entrypoint.sh /usr/local/bin/
 
 # Install docker compose
-RUN apk add --no-cache py-pip openssl bash
 RUN pip install docker-compose
 
 
