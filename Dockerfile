@@ -23,7 +23,7 @@ ENV LD_LIBRARY_PATH="/usr/glibc-compat/lib/libc.so.6"
 
 
 # Install base utilities
-RUN apt-get update \
+RUN sudo apt-get update \
 	&& apt-get install -y \
 		bash \
 		curl \
