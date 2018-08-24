@@ -9,7 +9,7 @@ ENV DOCKER_ARG="x86_64"
 # https://github.com/docker/docker-ce/blob/5b073ee2cf564edee5adca05eee574142f7627bb/components/packaging/static/hash_files !!
 # (no SHA file artifacts on download.docker.com yet as of 2017-06-07 though)
 
-ENV MAVEN_VERSION=3.5.3 
+ENV MAVEN_VERSION=3.5.4
 ENV NPM_VERSION=8.11.3
 ENV YARN_VERSION=1.7.0
 
@@ -29,12 +29,11 @@ RUN apt-get update \
 		bash \
 		curl \
 		tar \
-		libstdc++ \
 		fontconfig \
-		zlib \
-		libzip \
+		minizip \
+		libzip4 \
 		openssl \
-		py-pip \
+		python-pip \
 		git \
 	&& rm -rf /var/lib/apt/lists/*
 	
@@ -62,14 +61,12 @@ RUN set -ex; \
 		echo >&2 "error: failed to download 'docker-${DOCKER_VERSION}' from '${DOCKER_CHANNEL}' for '${DOCKER_ARG}'"; \
 		exit 1; \
 	fi; \
-	\
 	tar --extract \
 		--file docker.tgz \
 		--strip-components 1 \
 		--directory /usr/local/bin/ \
 	; \
 	rm docker.tgz; \
-	\
 	dockerd -v; \
 	docker -v
 
@@ -81,7 +78,7 @@ RUN pip install docker-compose
 
 
 # Create /opt directory
-RUN mkdir /opt
+RUN mkdir -p /opt
 
 # Install Maven
 RUN cd /opt && curl -o- http://apache.mirror.serversaustralia.com.au/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz | tar xz
