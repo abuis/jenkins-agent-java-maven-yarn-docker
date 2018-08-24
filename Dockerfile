@@ -21,9 +21,10 @@ ENV PATH="$PATH:${JAVA_HOME}/bin:${M2_HOME}/bin:${NODE_HOME}/bin:${YARN_HOME}/bi
 
 ENV LD_LIBRARY_PATH="/usr/glibc-compat/lib/libc.so.6"
 
+USER root
 
 # Install base utilities
-RUN sudo apt-get update \
+RUN apt-get update \
 	&& apt-get install -y \
 		bash \
 		curl \
@@ -105,6 +106,8 @@ RUN mkdir /root/.m2 && \
 
 # Define working directory.
 WORKDIR /data
+
+USER jenkins
 
 ENTRYPOINT ["jenkins-slave"]
 
