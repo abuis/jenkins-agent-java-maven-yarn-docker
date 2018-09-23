@@ -35,6 +35,7 @@ RUN apt-get update \
 		openssl \
 		python-pip \
 		git \
+		htmldoc \
 	&& rm -rf /var/lib/apt/lists/*
 	
 #RUN apk add --no-cache ca-certificates
