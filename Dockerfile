@@ -23,12 +23,6 @@ ENV LD_LIBRARY_PATH="/usr/glibc-compat/lib/libc.so.6"
 
 USER root
 
-# Add Azure repo
-RUN AZ_REPO=$(lsb_release -cs) && \
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
-    sudo tee /etc/apt/sources.list.d/azure-cli.list && \
-    curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-
 # Install base utilities
 RUN apt-get update \
 	&& apt-get install -y \
@@ -43,8 +37,16 @@ RUN apt-get update \
 		git \
 		htmldoc \
 		apt-transport-https \
-		azure-cli \
+		lsb-release \
 	&& rm -rf /var/lib/apt/lists/*
+
+# Add Azure repo
+RUN AZ_REPO=$(lsb_release -cs) && \
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
+    sudo tee /etc/apt/sources.list.d/azure-cli.list && \
+    curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - && \
+    apt-get update && apt-get install azure-cli
+
 	
 #RUN apk add --no-cache ca-certificates
 
