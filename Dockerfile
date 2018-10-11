@@ -38,6 +38,7 @@ RUN apt-get update \
 		htmldoc \
 		apt-transport-https \
 		lsb-release \
+		rpm \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Add Azure repo
