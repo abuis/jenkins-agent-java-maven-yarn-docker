@@ -4,4 +4,5 @@ This a container that can be used as Jenkins Build Agent for building projects t
 * Maven
 * Yarn
 * Docker
+* RPM
 
