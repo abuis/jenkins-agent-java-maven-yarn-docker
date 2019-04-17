@@ -10,11 +10,11 @@ ENV DOCKER_ARG="x86_64"
 # (no SHA file artifacts on download.docker.com yet as of 2017-06-07 though)
 
 ENV MAVEN_VERSION=3.5.4
-ENV NPM_VERSION=8.11.3
-ENV YARN_VERSION=1.7.0
+ENV NODE_VERSION=10.15.3
+ENV YARN_VERSION=1.15.2
 
 ENV M2_HOME="/opt/apache-maven-${MAVEN_VERSION}"
-ENV NODE_HOME="/opt/node-v${NPM_VERSION}-linux-x64"
+ENV NODE_HOME="/opt/node-v${NODE_VERSION}-linux-x64"
 ENV YARN_HOME="/opt/yarn-v${YARN_VERSION}"
 
 ENV PATH="$PATH:${JAVA_HOME}/bin:${M2_HOME}/bin:${NODE_HOME}/bin:${YARN_HOME}/bin"
@@ -99,7 +99,7 @@ RUN cd /opt && curl -o- http://apache.mirror.serversaustralia.com.au/maven/maven
 #ADD repository/ /root/.m2/repository/
 
 # Install NodeJS
-RUN cd /opt && curl -o- https://nodejs.org/dist/v${NPM_VERSION}/node-v${NPM_VERSION}-linux-x64.tar.gz | tar xz
+RUN cd /opt && curl -o- https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz | tar xz
 
 # Install Yarn 
 RUN cd /opt && curl -L -o- https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz | tar xz
@@ -108,7 +108,7 @@ RUN cd /opt && curl -L -o- https://github.com/yarnpkg/yarn/releases/download/v${
 RUN mkdir /root/.m2 && \
     echo "export JAVA_HOME=${JAVA_HOME}" >> /root/.bashrc && \
     echo "export M2_HOME=/opt/apache-maven-${MAVEN_VERSION}" >> /root/.bashrc && \
-    echo "export NODE_HOME=/opt/node-v${NPM_VERSION}-linux-x64" >> /root/.bashrc && \
+    echo "export NODE_HOME=/opt/node-v${NODE_VERSION}-linux-x64" >> /root/.bashrc && \
     echo "export YARN_HOME=/opt/yarn-v${YARN_VERSION}" >> /root/.bashrc && \
     echo "export PATH=$PATH" >> /root/.bashrc
 
