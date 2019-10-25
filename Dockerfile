@@ -24,6 +24,7 @@ ENV LD_LIBRARY_PATH="/usr/glibc-compat/lib/libc.so.6"
 USER root
 
 # Install base utilities
+RUN sed -i "s#deb http://deb.debian.org/debian stretch main#deb http://deb.debian.org/debian stretch main contrib non-free#g" /etc/apt/sources.list
 RUN apt-get update \
 	&& apt-get install -y \
 		bash \
@@ -103,6 +104,10 @@ RUN cd /opt && curl -o- https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VE
 
 # Install Yarn 
 RUN cd /opt && curl -L -o- https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz | tar xz
+
+# Install unoconv
+RUN apt-get install -y unoconv
+RUN (echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections) && apt-get install ttf-mscorefonts-installer -y
 
 # Create bashrc
 RUN mkdir /root/.m2 && \
