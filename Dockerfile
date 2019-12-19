@@ -117,6 +117,8 @@ RUN cd /tmp && \
 RUN apt-get install -y unoconv
 RUN (echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections) && apt-get install ttf-mscorefonts-installer -y
 
+# Install Helm 3
+RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
 # Create bashrc
 RUN mkdir /root/.m2 && \
