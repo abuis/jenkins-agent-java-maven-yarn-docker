@@ -120,6 +120,13 @@ RUN (echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
 # Install Helm 3
 RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
+# Install Gauge
+RUN apt-get install apt-transport-https && \
+    apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-keys 023EDB0B && \
+    echo deb https://dl.bintray.com/gauge/gauge-deb stable main | tee -a /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install gauge
+
 # Create bashrc
 RUN mkdir /root/.m2 && \
     echo "export JAVA_HOME=${JAVA_HOME}" >> /root/.bashrc && \
