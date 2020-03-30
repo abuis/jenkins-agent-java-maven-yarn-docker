@@ -47,7 +47,8 @@ RUN AZ_REPO=$(lsb_release -cs) && \
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
     tee /etc/apt/sources.list.d/azure-cli.list && \
     curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    apt-get update && apt-get install azure-cli
+    apt-get update && apt-get install azure-cli && \
+    az aks install-cli
 
 	
 #RUN apk add --no-cache ca-certificates
@@ -117,6 +118,15 @@ RUN cd /tmp && \
 RUN apt-get install -y unoconv
 RUN (echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections) && apt-get install ttf-mscorefonts-installer -y
 
+# Install Helm 3
+RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+# Install Gauge
+RUN apt-get install apt-transport-https && \
+    apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-keys 023EDB0B && \
+    echo deb https://dl.bintray.com/gauge/gauge-deb stable main | tee -a /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install gauge
 
 # Create bashrc
 RUN mkdir /root/.m2 && \
