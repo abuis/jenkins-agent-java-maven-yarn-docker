@@ -5,6 +5,7 @@ This a container that can be used as Jenkins Build Agent for building projects t
 * Yarn
 * Docker
 * RPM
+* Kubectl
 
 Docker repository: https://hub.docker.com/r/midmarch/jenkins-agent-java-maven-yarn-docker
 
